@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хаб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3efe7;
+            font-family: 'Noto Serif SC', 'Noto Serif JP', 'Times New Roman', '游明朝', 'Yu Mincho', serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 10% 30%, rgba(180, 140, 100, 0.03) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+        }
+
+        .scroll-list {
+            max-width: 380px;
+            width: 100%;
+            background: rgba(245, 240, 230, 0.6);
+            backdrop-filter: blur(0px);
+            border-left: 1px solid #dacbb8;
+            border-right: 1px solid #dacbb8;
+            padding: 2.2rem 1rem;
+            box-shadow: 0 20px 30px -15px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,250,240,0.8);
+        }
+
+        .east-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .east-list li {
+            text-align: center;
+            border-bottom: 0.5px solid #e2d5c4;
+        }
+
+        .east-list a {
+            display: block;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: #6a4e2e;
+            padding: 1rem 0.5rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .east-list a::before {
+            content: "・";
+            opacity: 0;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #b87c4f;
+            transition: opacity 0.2s, left 0.2s;
+        }
+
+        .east-list a:hover {
+            color: #a5612c;
+            background: #f4ede3;
+            padding-left: 1.8rem;
+            letter-spacing: 2px;
+        }
+
+        .east-list a:hover::before {
+            opacity: 1;
+            left: 12px;
+        }
+
+        .hanko {
+            text-align: center;
+            margin-top: 1.6rem;
+            font-size: 0.65rem;
+            color: #b28b6f;
+            letter-spacing: 1px;
+            font-family: monospace;
+            border-top: 0.5px solid #e2d5c4;
+            padding-top: 1rem;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 480px) {
+            .east-list a {
+                font-size: 1rem;
+                padding: 0.7rem 0.5rem;
+            }
+            .scroll-list {
+                padding: 1.2rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="scroll-list">
+    <ul class="east-list">
+        <li><a href="./task3/form.php">Задание 3</a></li>
+        <li><a href="./task4/form.php">Задание 4</a></li>
+        <li><a href="./task5/index.php">Задание 5</a></li>
+        <li><a href="./screenshots/index.html">Скриншоты</a></li>
+    </ul>
+    <div class="hanko">⦿ 道</div>
+</div>
+</body>
+</html>
