@@ -8,6 +8,13 @@ require_once __DIR__ . '/db_functions.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/jwt.php';
 
+if (!function_exists('mb_strlen')) {
+    function mb_strlen($str, $encoding = 'UTF-8') {
+        return preg_match_all('/./us', $str, $matches);
+    }
+}
+
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {

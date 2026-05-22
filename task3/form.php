@@ -1,32 +1,67 @@
 <?php
-// form.php - обработчик POST запроса (полная замена form.go)
 session_start();
 header('Content-Type: text/html; charset=utf-8');
-
 require_once __DIR__ . '/db.php';
 
+// Если это GET – показываем форму
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    ?>
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head><meta charset="UTF-8"><title>Анкета</title></head>
+    <body>
+    <form action="form.php" method="POST">
+        <label>ФИО: <input type="text" name="name" required></label><br>
+        <label>Телефон: <input type="tel" name="phone" required></label><br>
+        <label>Email: <input type="email" name="email" required></label><br>
+        <label>Дата рождения: <input type="date" name="birthdate" required></label><br>
+        <label>Пол: 
+            <input type="radio" name="gender" value="male"> Мужской
+            <input type="radio" name="gender" value="female"> Женский
+        </label><br>
+        <label>Языки: 
+            <select name="languages[]" multiple required>
+                <option value="1">Pascal</option><option value="2">C</option><option value="3">C++</option>
+                <option value="4">JavaScript</option><option value="5">PHP</option><option value="6">Python</option>
+                <option value="7">Java</option><option value="8">Haskell</option><option value="9">Clojure</option>
+                <option value="10">Prolog</option><option value="11">Scala</option><option value="12">Go</option>
+            </select>
+        </label><br>
+        <label>Биография: <textarea name="bio" required></textarea></label><br>
+        <label><input type="checkbox" name="contract" required> Согласен с контрактом</label><br>
+        <button type="submit">Отправить</button>
+    </form>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
+// POST – обработка
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo '<h2>Method not allowed</h2>';
     exit;
 }
 
+// Эмуляция mb_strlen, если расширение не загружено
+if (!function_exists('mb_strlen')) {
+    function mb_strlen($str, $encoding = null) {
+        return preg_match_all('/./us', $str, $matches);
+    }
+}
+
 $errors = [];
 $data = [
-    'name' => '',
-    'phone' => '',
-    'email' => '',
-    'birthdate' => '',
-    'gender' => '',
-    'bio' => '',
-    'languages' => [],
+    'name' => '', 'phone' => '', 'email' => '', 'birthdate' => '',
+    'gender' => '', 'bio' => '', 'languages' => []
 ];
 
 function getPostString($key, $default = '') {
     return isset($_POST[$key]) ? trim($_POST[$key]) : $default;
 }
 
-// 1. Name
+// Name
 $name = getPostString('name');
 if ($name === '') {
     $errors[] = 'Name is required';
@@ -41,7 +76,7 @@ if ($name === '') {
     }
 }
 
-// 2. Phone
+// Phone
 $phone = getPostString('phone');
 if ($phone === '') {
     $errors[] = 'Phone is required';
@@ -51,7 +86,7 @@ if ($phone === '') {
     $data['phone'] = $phone;
 }
 
-// 3. Email
+// Email
 $email = getPostString('email');
 if ($email === '') {
     $errors[] = 'Email is required';
@@ -61,7 +96,7 @@ if ($email === '') {
     $data['email'] = $email;
 }
 
-// 4. Birthdate
+// Birthdate
 $birthdate = getPostString('birthdate');
 if ($birthdate === '') {
     $errors[] = 'Birthdate is required';
@@ -74,7 +109,7 @@ if ($birthdate === '') {
     }
 }
 
-// 5. Gender
+// Gender
 $gender = getPostString('gender');
 $validGenders = ['male', 'female'];
 if (!in_array($gender, $validGenders, true)) {
@@ -83,7 +118,7 @@ if (!in_array($gender, $validGenders, true)) {
     $data['gender'] = $gender;
 }
 
-// 6. Languages
+// Languages
 $languages = isset($_POST['languages']) && is_array($_POST['languages']) ? $_POST['languages'] : [];
 $validLanguageIDs = array_map('strval', range(1, 12));
 if (empty($languages)) {
@@ -102,7 +137,7 @@ if (empty($languages)) {
     }
 }
 
-// 7. Bio
+// Bio
 $bio = getPostString('bio');
 if ($bio === '') {
     $errors[] = 'Bio is required';
@@ -110,14 +145,13 @@ if ($bio === '') {
     $data['bio'] = $bio;
 }
 
-// 8. Contract
+// Contract
 if (!isset($_POST['contract']) || $_POST['contract'] === '') {
     $errors[] = 'You must agree to the contract';
 }
 
-// Вывод ошибок (точно как в Go: "Erorrs:")
 if (!empty($errors)) {
-    echo '<h2>Erorrs:</h2><ul>';
+    echo '<h2>Errors:</h2><ul>';
     foreach ($errors as $err) {
         echo '<li>' . htmlspecialchars($err) . '</li>';
     }
@@ -128,7 +162,6 @@ if (!empty($errors)) {
 // Сохранение в БД
 try {
     $pdo->beginTransaction();
-
     $stmt = $pdo->prepare("
         INSERT INTO applications (full_name, phone, email, birth_date, gender, biography, contract_accepted)
         VALUES (:full_name, :phone, :email, :birth_date, :gender, :biography, 1)
@@ -147,7 +180,6 @@ try {
     foreach ($data['languages'] as $langId) {
         $langStmt->execute([':app_id' => $appId, ':lang_id' => $langId]);
     }
-
     $pdo->commit();
     echo '<h2>Application submitted successfully!</h2>';
 } catch (PDOException $e) {

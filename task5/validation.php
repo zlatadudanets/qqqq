@@ -1,4 +1,11 @@
 <?php
+
+if (!function_exists('mb_strlen')) {
+    function mb_strlen($str, $encoding = 'UTF-8') {
+        return preg_match_all('/./us', $str, $matches);
+    }
+}
+
 // validation.php – валидация данных анкеты
 function validateFormData($post) {
     $data = [

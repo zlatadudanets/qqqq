@@ -5,6 +5,13 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once __DIR__ . '/db.php';
 
+
+if (!function_exists('mb_strlen')) {
+    function mb_strlen($str, $encoding = 'UTF-8') {
+        return preg_match_all('/./us', $str, $matches);
+    }
+}
+
 // ---- Вспомогательные функции для cookies (аналог cookie.go) ----
 function setSessionCookie($name, $value) {
     setcookie($name, $value, [
