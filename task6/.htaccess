@@ -1,0 +1,5 @@
+SetEnv DB_HOST "localhost"
+SetEnv DB_NAME "u82300"
+SetEnv DB_USER "u82300"
+SetEnv DB_PASS "6029988"
+SetEnv JWT_SECRET "very-secret"
