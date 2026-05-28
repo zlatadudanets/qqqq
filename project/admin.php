@@ -33,8 +33,13 @@ $action = $_GET['action'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'edit') {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($id <= 0) { http_response_code(400); echo 'Invalid ID'; exit; }
-    $order = getOrderByID($pdo, $id);
+    
+    // Получаем заказ напрямую из БД
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ?");
+    $stmt->execute([$id]);
+    $order = $stmt->fetch();
     if (!$order) { http_response_code(404); echo 'Order not found'; exit; }
+    
     renderAdminEdit($order, $id);
     exit;
 }
@@ -44,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'edit') {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($id <= 0) { http_response_code(400); echo 'Invalid ID'; exit; }
     
-    // Обновляем только нужные поля
     $updateData = [
         'name' => trim($_POST['name'] ?? ''),
         'phone' => trim($_POST['phone'] ?? ''),
@@ -59,7 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'edit') {
     if (empty($updateData['bouquet'])) $errors['bouquet'] = 'Выберите букет';
     
     if (!empty($errors)) {
-        renderAdminEdit($updateData, $id, $errors);
+        $order = ['customer_name' => $updateData['name'], 'customer_phone' => $updateData['phone'], 
+                  'customer_email' => $updateData['email'], 'bouquet_name' => $updateData['bouquet'], 
+                  'comment' => $updateData['comment']];
+        renderAdminEdit($order, $id, $errors);
         exit;
     }
     
@@ -116,7 +123,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
     }
 }
 
-$orders = getAllOrders($pdo);
+// Получаем все заказы напрямую из БД
+$orders = $pdo->query("
+    SELECT id, order_number, customer_name, customer_phone, customer_email,
+           bouquet_name, bouquet_price, comment, status, created_at
+    FROM orders ORDER BY id DESC
+")->fetchAll();
+
 $stats = getOrderStats($pdo);
 $csrfToken = getOrCreateCSRFToken();
 
@@ -244,7 +257,14 @@ function renderAdminList($orders, $stats, $csrfToken) {
     <table>
         <thead>
             <tr>
-                <th>№ заказа</th><th>Дата</th><th>Клиент</th><th>Телефон</th><th>Букет</th><th>Сумма</th><th>Статус</th><th>Действия</th>
+                <th>№ заказа</th>
+                <th>Дата</th>
+                <th>Клиент</th>
+                <th>Телефон</th>
+                <th>Букет</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
@@ -262,12 +282,12 @@ function renderAdminList($orders, $stats, $csrfToken) {
                     </span>
                 </td>
                 <td data-label="Действия">
-                    <a href="admin.php?action=edit&id=<?= $order['id'] ?>" class="btn btn-primary">✎</a>
+                    <a href="admin.php?action=edit&id=<?= $order['id'] ?>" class="btn btn-primary">✎ Редакт</a>
                     <a href="admin.php?action=status&id=<?= $order['id'] ?>&status=processing" class="btn">В работу</a>
-                    <a href="admin.php?action=status&id=<?= $order['id'] ?>&status=completed" class="btn btn-primary">✓</a>
+                    <a href="admin.php?action=status&id=<?= $order['id'] ?>&status=completed" class="btn btn-primary">Выполнен</a>
                     <form style="display:inline" action="admin.php?action=delete&id=<?= $order['id'] ?>" method="POST" onsubmit="return confirm('Удалить заказ?')">
                         <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>">
-                        <button type="submit" class="btn btn-danger">🗑</button>
+                        <button type="submit" class="btn btn-danger">🗑 Удалить</button>
                     </form>
                 </td>
             </tr>
@@ -283,7 +303,7 @@ function renderAdminList($orders, $stats, $csrfToken) {
 <?php
 }
 
-function renderAdminEdit($orderData, $id, $errors = []) {
+function renderAdminEdit($order, $id, $errors = []) {
     global $BOUQUETS;
     $csrfToken = getOrCreateCSRFToken();
     ?>
@@ -322,24 +342,24 @@ function renderAdminEdit($orderData, $id, $errors = []) {
         
         <div class="field">
             <label>Имя *</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($orderData['name'] ?? '') ?>">
+            <input type="text" name="name" value="<?= htmlspecialchars($order['customer_name'] ?? '') ?>">
         </div>
         
         <div class="field">
             <label>Телефон *</label>
-            <input type="text" name="phone" value="<?= htmlspecialchars($orderData['phone'] ?? '') ?>">
+            <input type="text" name="phone" value="<?= htmlspecialchars($order['customer_phone'] ?? '') ?>">
         </div>
         
         <div class="field">
             <label>Email</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($orderData['email'] ?? '') ?>">
+            <input type="email" name="email" value="<?= htmlspecialchars($order['customer_email'] ?? '') ?>">
         </div>
         
         <div class="field">
             <label>Букет *</label>
             <select name="bouquet">
                 <?php foreach ($BOUQUETS as $b): ?>
-                <option value="<?= htmlspecialchars($b['name']) ?>" <?= ($orderData['bouquet'] ?? '') == $b['name'] ? 'selected' : '' ?>>
+                <option value="<?= htmlspecialchars($b['name']) ?>" <?= ($order['bouquet_name'] ?? '') == $b['name'] ? 'selected' : '' ?>>
                     <?= htmlspecialchars($b['name']) ?>
                 </option>
                 <?php endforeach; ?>
@@ -348,7 +368,17 @@ function renderAdminEdit($orderData, $id, $errors = []) {
         
         <div class="field">
             <label>Комментарий</label>
-            <textarea name="comment" rows="3"><?= htmlspecialchars($orderData['comment'] ?? '') ?></textarea>
+            <textarea name="comment" rows="3"><?= htmlspecialchars($order['comment'] ?? '') ?></textarea>
+        </div>
+        
+        <div class="field">
+            <label>Статус</label>
+            <select name="status">
+                <option value="new" <?= ($order['status'] ?? '') == 'new' ? 'selected' : '' ?>>🟡 Новый</option>
+                <option value="processing" <?= ($order['status'] ?? '') == 'processing' ? 'selected' : '' ?>>🟠 В обработке</option>
+                <option value="completed" <?= ($order['status'] ?? '') == 'completed' ? 'selected' : '' ?>>✅ Выполнен</option>
+                <option value="cancelled" <?= ($order['status'] ?? '') == 'cancelled' ? 'selected' : '' ?>>❌ Отменен</option>
+            </select>
         </div>
         
         <button type="submit" class="btn">Сохранить</button>
