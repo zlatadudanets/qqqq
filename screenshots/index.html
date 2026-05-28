@@ -323,6 +323,45 @@
         </div>
     </div>
 
+    <!-- Шаг 11 — НОВЫЙ: три дополнительные таблицы для проекта -->
+    <div class="step">
+        <div class="step-caption">Добавляем три новые таблицы для проекта</div>
+        <div class="screenshot">
+            <img src="11.png" alt="show tables и describe новых таблиц">
+        </div>
+        <div class="step-text">
+            Сначала выполняем <code>SHOW TABLES;</code>, чтобы увидеть все существующие таблицы. Затем описываем структуру трёх новых таблиц: <code>orders</code>, <code>credentials_2</code> и <code>admin_credentials_2</code>.
+        </div>
+        <div class="step-details">
+            <strong>Таблица <code>orders</code> (заказы букетов):</strong><br>
+            — <code>id</code> — первичный ключ, автоинкремент;<br>
+            — <code>order_number</code> — уникальный номер заказа;<br>
+            — <code>customer_name</code> — имя клиента;<br>
+            — <code>customer_phone</code> — телефон клиента;<br>
+            — <code>customer_email</code> — email клиента;<br>
+            — <code>bouquet_name</code> — название выбранного букета;<br>
+            — <code>bouquet_price</code> — цена букета (с двумя десятичными знаками);<br>
+            — <code>comment</code> — текстовое поле для комментария к заказу;<br>
+            — <code>status</code> — статус заказа с возможными значениями: <code>new</code>, <code>processing</code>, <code>completed</code>, <code>cancelled</code>;<br>
+            — <code>created_at</code> — дата и время создания (автоматически проставляется текущим временем);<br>
+            — <code>updated_at</code> — дата и время последнего обновления (обновляется автоматически при изменении записи).<br><br>
+
+            <strong>Таблица <code>credentials_2</code> (учётные данные для заказов):</strong><br>
+            — <code>id</code> — первичный ключ;<br>
+            — <code>order_id</code> — уникальная ссылка на заказ (внешний ключ к <code>orders.id</code>);<br>
+            — <code>login</code> — уникальный логин для входа;<br>
+            — <code>password_hash</code> — хеш пароля;<br>
+            — <code>created_at</code> — метка времени создания записи.<br><br>
+
+            <strong>Таблица <code>admin_credentials_2</code> (резервная таблица для администратора):</strong><br>
+            — <code>id</code> — первичный ключ;<br>
+            — <code>login</code> — уникальный логин администратора;<br>
+            — <code>password_hash</code> — хеш пароля администратора.<br><br>
+
+            Эти три таблицы необходимы для проекта (8 задание): теперь система может обрабатывать заказы букетов с отдельной аутентификацией для клиентов. Такая архитектура позволяет легко масштабировать проект и добавлять новые сущности без изменения существующей логики.
+        </div>
+    </div>
+
     <div class="hanko">⦿ 完</div>
 </div>
 </body>
