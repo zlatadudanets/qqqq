@@ -4,6 +4,6 @@ session_start();
 require_once __DIR__ . '/jwt.php';
 
 deleteJWTCookie();
-header('Location: index.php');
+header('Location: index.html');
 exit;
 ?>
