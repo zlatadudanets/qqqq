@@ -43,25 +43,70 @@ if ($method === 'POST') {
         exit;
     }
 
-    list($formData, $errors) = validateOrderData($_POST);
+    // Обновляем только нужные поля (без address и delivery_date)
+    $updateData = [
+        'name' => trim($_POST['name'] ?? ''),
+        'phone' => trim($_POST['phone'] ?? ''),
+        'email' => trim($_POST['email'] ?? ''),
+        'bouquet' => trim($_POST['bouquet'] ?? ''),
+        'comment' => trim($_POST['comment'] ?? ''),
+        'address' => '',  // не используем
+        'delivery_date' => null,  // не используем
+        'agree' => true
+    ];
+    
+    // Валидация
+    $errors = [];
+    if (empty($updateData['name'])) $errors['name'] = 'Имя обязательно';
+    if (empty($updateData['phone'])) $errors['phone'] = 'Телефон обязателен';
+    if (empty($updateData['bouquet'])) $errors['bouquet'] = 'Выберите букет';
+    
     if (!empty($errors)) {
-        saveErrorsToCookie($errors, $formData);
+        saveErrorsToCookie($errors, $updateData);
         header('Location: edit-order.php');
         exit;
     }
     
-    if (updateOrder($pdo, $orderId, $formData)) {
-        saveSuccessToCookie($formData);
+    // Обновляем заказ
+    $stmt = $pdo->prepare("
+        UPDATE orders SET 
+            customer_name = :name,
+            customer_phone = :phone,
+            customer_email = :email,
+            bouquet_name = :bouquet,
+            comment = :comment
+        WHERE id = :id
+    ");
+    
+    $result = $stmt->execute([
+        ':name' => $updateData['name'],
+        ':phone' => $updateData['phone'],
+        ':email' => $updateData['email'] ?: null,
+        ':bouquet' => $updateData['bouquet'],
+        ':comment' => $updateData['comment'],
+        ':id' => $orderId
+    ]);
+    
+    if ($result) {
+        // Очищаем старые ошибки и сохраняем успех
+        deleteCookie('form_errors');
+        setSessionCookie('form_success', '1');
+        header('Location: edit-order.php');
+        exit;
+    } else {
+        saveErrorsToCookie(['general' => 'Ошибка сохранения'], $updateData);
+        header('Location: edit-order.php');
+        exit;
     }
-    header('Location: edit-order.php');  // ← Редирект после сохранения
-    exit;
 }
 
 function renderEditOrder($pageData, $login, $status) {
     global $BOUQUETS;
     $values = $pageData['values'];
     $errors = $pageData['errors'];
-    $success = $pageData['success'];
+    $success = getCookieValue('form_success') !== null;
+    if ($success) deleteCookie('form_success');
+    
     $csrfToken = htmlspecialchars($pageData['csrf_token']);
     
     $statusText = [
@@ -140,7 +185,7 @@ function renderEditOrder($pageData, $login, $status) {
             outline: none;
             border-color: #FF8FAB;
         }
-        .field-error input { border-color: #e74c3c; }
+        .field-error input, .field-error select { border-color: #e74c3c; }
         .error-msg { color: #e74c3c; font-size: 0.7rem; margin-top: 0.3rem; }
         .btn {
             width: 100%;
@@ -179,13 +224,8 @@ function renderEditOrder($pageData, $login, $status) {
             gap: 1rem;
             margin-top: 1rem;
         }
-        .button-group .btn {
-            flex: 1;
-        }
-        .button-group .btn-secondary {
-            flex: 1;
-            text-align: center;
-        }
+        .button-group .btn { flex: 1; }
+        .button-group .btn-secondary { flex: 1; text-align: center; }
         @media (max-width: 600px) {
             body { padding: 1rem; }
             .form-container { padding: 1.2rem; }
@@ -207,6 +247,10 @@ function renderEditOrder($pageData, $login, $status) {
 
     <?php if ($success): ?>
         <div class="success-banner">✓ Данные заказа обновлены</div>
+    <?php endif; ?>
+    
+    <?php if (isset($errors['general'])): ?>
+        <div class="success-banner" style="background:#f8d7da; color:#721c24;">⚠️ <?= htmlspecialchars($errors['general']) ?></div>
     <?php endif; ?>
 
     <form action="edit-order.php" method="POST">
@@ -237,8 +281,9 @@ function renderEditOrder($pageData, $login, $status) {
         </div>
 
         <div class="field <?= isset($errors['bouquet']) ? 'field-error' : '' ?>">
-            <label>Букет</label>
+            <label>Букет *</label>
             <select name="bouquet">
+                <option value="">-- Выберите букет --</option>
                 <?php foreach ($BOUQUETS as $bouquet): ?>
                 <option value="<?= htmlspecialchars($bouquet['name']) ?>" <?= ($values['bouquet'] ?? '') == $bouquet['name'] ? 'selected' : '' ?>>
                     <?= htmlspecialchars($bouquet['name']) ?> - <?= number_format($bouquet['price'], 0, '', ' ') ?> ₽
@@ -251,22 +296,12 @@ function renderEditOrder($pageData, $login, $status) {
         </div>
 
         <div class="field">
-            <label>Адрес доставки</label>
-            <input type="text" name="address" value="<?= htmlspecialchars($values['address'] ?? '') ?>">
-        </div>
-
-        <div class="field">
-            <label>Дата доставки</label>
-            <input type="date" name="delivery_date" value="<?= htmlspecialchars($values['delivery_date'] ?? '') ?>">
-        </div>
-
-        <div class="field">
-            <label>Комментарий</label>
-            <textarea name="comment" rows="3"><?= htmlspecialchars($values['comment'] ?? '') ?></textarea>
+            <label>Комментарий к заказу</label>
+            <textarea name="comment" rows="3" placeholder="Ваши пожелания..."><?= htmlspecialchars($values['comment'] ?? '') ?></textarea>
         </div>
 
         <div class="button-group">
-            <button type="submit" class="btn">💾 Сохранить изменения</button>
+            <button type="submit" class="btn">Сохранить изменения</button>
             <a href="index.html" class="btn-secondary">← На главную</a>
         </div>
     </form>
