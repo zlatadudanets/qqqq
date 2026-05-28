@@ -53,7 +53,7 @@ if ($method === 'POST') {
     if (updateOrder($pdo, $orderId, $formData)) {
         saveSuccessToCookie($formData);
     }
-    header('Location: edit-order.php');
+    header('Location: edit-order.php');  // ← Редирект после сохранения
     exit;
 }
 
@@ -100,6 +100,8 @@ function renderEditOrder($pageData, $login, $status) {
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #e2d5c4;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         h1 {
             font-family: 'Playfair Display', serif;
@@ -157,6 +159,11 @@ function renderEditOrder($pageData, $login, $status) {
             border: 1px solid #e2d5c4;
             color: #8b694c;
             margin-top: 0.5rem;
+            text-align: center;
+            display: inline-block;
+            width: auto;
+            padding: 0.7rem 1.5rem;
+            text-decoration: none;
         }
         .btn-secondary:hover { background: #f8f9fa; transform: none; }
         .success-banner {
@@ -167,10 +174,23 @@ function renderEditOrder($pageData, $login, $status) {
             margin-bottom: 1rem;
             text-align: center;
         }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .button-group .btn {
+            flex: 1;
+        }
+        .button-group .btn-secondary {
+            flex: 1;
+            text-align: center;
+        }
         @media (max-width: 600px) {
             body { padding: 1rem; }
             .form-container { padding: 1.2rem; }
-            .topbar { flex-direction: column; gap: 0.5rem; text-align: center; }
+            .topbar { flex-direction: column; text-align: center; }
+            .button-group { flex-direction: column; }
         }
     </style>
 </head>
@@ -178,7 +198,7 @@ function renderEditOrder($pageData, $login, $status) {
 <div class="form-container">
     <div class="topbar">
         <h1>🌸 Мой заказ</h1>
-        <span class="status-badge"><?= $statusText ?></span>
+        <span class="status-badge"><?= htmlspecialchars($statusText) ?></span>
     </div>
     
     <div class="user-info">
@@ -245,8 +265,10 @@ function renderEditOrder($pageData, $login, $status) {
             <textarea name="comment" rows="3"><?= htmlspecialchars($values['comment'] ?? '') ?></textarea>
         </div>
 
-        <button type="submit" class="btn">💾 Сохранить изменения</button>
-        <a href="index.php" class="btn btn-secondary" style="display: block; text-align: center; text-decoration: none;">← На главную</a>
+        <div class="button-group">
+            <button type="submit" class="btn">💾 Сохранить изменения</button>
+            <a href="index.html" class="btn-secondary">← На главную</a>
+        </div>
     </form>
 </div>
 </body>
