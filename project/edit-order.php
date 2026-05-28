@@ -302,7 +302,7 @@ function renderEditOrder($pageData, $login, $status) {
 
         <div class="button-group">
             <button type="submit" class="btn">Сохранить изменения</button>
-            <a href="index.html" class="btn-secondary">← На главную</a>
+            <a href="logout.php" class="btn-secondary">← На главную</a>
         </div>
     </form>
 </div>
