@@ -43,12 +43,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'edit') {
     if (!validateCSRFToken()) { http_response_code(403); echo 'Request denied'; exit; }
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($id <= 0) { http_response_code(400); echo 'Invalid ID'; exit; }
-    list($formData, $errors) = validateOrderData($_POST);
+    
+    // Обновляем только нужные поля
+    $updateData = [
+        'name' => trim($_POST['name'] ?? ''),
+        'phone' => trim($_POST['phone'] ?? ''),
+        'email' => trim($_POST['email'] ?? ''),
+        'bouquet' => trim($_POST['bouquet'] ?? ''),
+        'comment' => trim($_POST['comment'] ?? '')
+    ];
+    
+    $errors = [];
+    if (empty($updateData['name'])) $errors['name'] = 'Имя обязательно';
+    if (empty($updateData['phone'])) $errors['phone'] = 'Телефон обязателен';
+    if (empty($updateData['bouquet'])) $errors['bouquet'] = 'Выберите букет';
+    
     if (!empty($errors)) {
-        renderAdminEdit($formData, $id, $errors);
+        renderAdminEdit($updateData, $id, $errors);
         exit;
     }
-    if (updateOrder($pdo, $id, $formData)) {
+    
+    $stmt = $pdo->prepare("
+        UPDATE orders SET 
+            customer_name = :name,
+            customer_phone = :phone,
+            customer_email = :email,
+            bouquet_name = :bouquet,
+            comment = :comment
+        WHERE id = :id
+    ");
+    
+    $result = $stmt->execute([
+        ':name' => $updateData['name'],
+        ':phone' => $updateData['phone'],
+        ':email' => $updateData['email'] ?: null,
+        ':bouquet' => $updateData['bouquet'],
+        ':comment' => $updateData['comment'],
+        ':id' => $id
+    ]);
+    
+    if ($result) {
         header('Location: admin.php');
         exit;
     } else {
@@ -267,26 +301,58 @@ function renderAdminEdit($orderData, $id, $errors = []) {
         label { display: block; font-size: 0.8rem; font-weight: 600; color: #8b694c; margin-bottom: 0.3rem; }
         input, select, textarea { width: 100%; padding: 0.7rem; border: 1px solid #e2d5c4; border-radius: 10px; font-family: inherit; }
         .btn { background: #FF8FAB; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 50px; cursor: pointer; margin-right: 0.5rem; }
-        .btn-cancel { background: #ccc; color: #666; }
+        .btn-cancel { background: #ccc; color: #666; text-decoration: none; display: inline-block; }
         .error-msg { color: #e74c3c; font-size: 0.7rem; margin-top: 0.3rem; }
     </style>
 </head>
 <body>
 <div class="card">
     <h2>✎ Редактирование заказа #<?= $id ?></h2>
+    
+    <?php if (!empty($errors)): ?>
+        <div style="background:#f8d7da; color:#721c24; padding:0.8rem; border-radius:10px; margin-bottom:1rem;">
+            <?php foreach ($errors as $error): ?>
+                <div>• <?= htmlspecialchars($error) ?></div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    
     <form action="admin.php?action=edit&id=<?= $id ?>" method="POST">
         <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>">
         
-        <div class="field"><label>Имя</label><input type="text" name="name" value="<?= htmlspecialchars($orderData['name'] ?? '') ?>"></div>
-        <div class="field"><label>Телефон</label><input type="text" name="phone" value="<?= htmlspecialchars($orderData['phone'] ?? '') ?>"></div>
-        <div class="field"><label>Email</label><input type="email" name="email" value="<?= htmlspecialchars($orderData['email'] ?? '') ?>"></div>
-        <div class="field"><label>Букет</label><select name="bouquet"><?php foreach ($BOUQUETS as $b): ?><option value="<?= $b['name'] ?>" <?= ($orderData['bouquet'] ?? '') == $b['name'] ? 'selected' : '' ?>><?= $b['name'] ?></option><?php endforeach; ?></select></div>
-        <div class="field"><label>Адрес</label><input type="text" name="address" value="<?= htmlspecialchars($orderData['address'] ?? '') ?>"></div>
-        <div class="field"><label>Дата доставки</label><input type="date" name="delivery_date" value="<?= htmlspecialchars($orderData['delivery_date'] ?? '') ?>"></div>
-        <div class="field"><label>Комментарий</label><textarea name="comment" rows="3"><?= htmlspecialchars($orderData['comment'] ?? '') ?></textarea></div>
+        <div class="field">
+            <label>Имя *</label>
+            <input type="text" name="name" value="<?= htmlspecialchars($orderData['name'] ?? '') ?>">
+        </div>
+        
+        <div class="field">
+            <label>Телефон *</label>
+            <input type="text" name="phone" value="<?= htmlspecialchars($orderData['phone'] ?? '') ?>">
+        </div>
+        
+        <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($orderData['email'] ?? '') ?>">
+        </div>
+        
+        <div class="field">
+            <label>Букет *</label>
+            <select name="bouquet">
+                <?php foreach ($BOUQUETS as $b): ?>
+                <option value="<?= htmlspecialchars($b['name']) ?>" <?= ($orderData['bouquet'] ?? '') == $b['name'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($b['name']) ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        
+        <div class="field">
+            <label>Комментарий</label>
+            <textarea name="comment" rows="3"><?= htmlspecialchars($orderData['comment'] ?? '') ?></textarea>
+        </div>
         
         <button type="submit" class="btn">Сохранить</button>
-        <a href="admin.php" class="btn btn-cancel" style="text-decoration: none;">Отмена</a>
+        <a href="admin.php" class="btn btn-cancel">Отмена</a>
     </form>
 </div>
 </body>

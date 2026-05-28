@@ -16,12 +16,10 @@ function saveOrderToDatabase($pdo, $data) {
         $stmt = $pdo->prepare("
             INSERT INTO orders (
                 order_number, customer_name, customer_phone, customer_email,
-                bouquet_name, bouquet_price, comment, delivery_address, delivery_date,
-                ip_address, user_agent, status
+                bouquet_name, bouquet_price, comment, status
             ) VALUES (
                 :order_number, :name, :phone, :email,
-                :bouquet, :price, :comment, :address, :delivery_date,
-                :ip, :user_agent, 'new'
+                :bouquet, :price, :comment, 'new'
             )
         ");
         
@@ -47,11 +45,7 @@ function saveOrderToDatabase($pdo, $data) {
             ':email' => $data['email'] ?? null,
             ':bouquet' => $bouquetName,
             ':price' => $price,
-            ':comment' => $data['comment'] ?? '',
-            ':address' => $data['address'] ?? null,
-            ':delivery_date' => $data['delivery_date'] ?? null,
-            ':ip' => $_SERVER['REMOTE_ADDR'] ?? null,
-            ':user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
+            ':comment' => $data['comment'] ?? ''
         ]);
         
         $orderId = $pdo->lastInsertId();
@@ -88,7 +82,7 @@ function findCredentialsByLogin($pdo, $login) {
 function getOrderByID($pdo, $id) {
     $stmt = $pdo->prepare("
         SELECT order_number, customer_name, customer_phone, customer_email,
-               bouquet_name, bouquet_price, comment, delivery_address, delivery_date, status
+               bouquet_name, bouquet_price, comment, status
         FROM orders WHERE id = :id
     ");
     $stmt->execute([':id' => $id]);
@@ -103,8 +97,6 @@ function getOrderByID($pdo, $id) {
         'bouquet' => $order['bouquet_name'],
         'price' => $order['bouquet_price'],
         'comment' => $order['comment'],
-        'address' => $order['delivery_address'],
-        'delivery_date' => $order['delivery_date'],
         'status' => $order['status']
     ];
 }
@@ -117,9 +109,7 @@ function updateOrder($pdo, $id, $data) {
                 customer_phone = :phone,
                 customer_email = :email,
                 bouquet_name = :bouquet,
-                comment = :comment,
-                delivery_address = :address,
-                delivery_date = :delivery_date
+                comment = :comment
             WHERE id = :id
         ");
         
@@ -129,8 +119,6 @@ function updateOrder($pdo, $id, $data) {
             ':email' => $data['email'],
             ':bouquet' => $data['bouquet'],
             ':comment' => $data['comment'],
-            ':address' => $data['address'] ?? '',
-            ':delivery_date' => $data['delivery_date'] ?? null,
             ':id' => $id
         ]);
     } catch (PDOException $e) {
@@ -142,7 +130,7 @@ function updateOrder($pdo, $id, $data) {
 function getAllOrders($pdo) {
     $stmt = $pdo->query("
         SELECT id, order_number, customer_name, customer_phone, customer_email,
-               bouquet_name, bouquet_price, comment, status, created_at, delivery_address, delivery_date
+               bouquet_name, bouquet_price, comment, status, created_at
         FROM orders ORDER BY id DESC
     ");
     return $stmt->fetchAll();

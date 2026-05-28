@@ -14,7 +14,7 @@ $name = trim($_POST['name'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $bouquet = trim($_POST['bouquet'] ?? '');
-$comment = trim($_POST['message'] ?? ''); // в форме поле называется message
+$comment = trim($_POST['message'] ?? '');
 $agree = isset($_POST['agree']);
 
 // Валидация
@@ -36,8 +36,6 @@ $orderData = [
     'email' => $email ?: null,
     'bouquet' => $bouquet,
     'comment' => $comment,
-    'address' => '',
-    'delivery_date' => null,
     'agree' => true
 ];
 
