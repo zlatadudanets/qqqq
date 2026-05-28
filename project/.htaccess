@@ -1,0 +1,32 @@
+RewriteEngine On
+
+# Перенаправление всех API запросов на index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+
+# Защита файлов
+<FilesMatch "\.(sql|ini|log|config)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+Options -Indexes
+
+# CORS заголовки для API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# PHP настройки
+php_value display_errors 0
+php_value error_reporting E_ALL
+
+
+SetEnv DB_HOST "localhost"
+SetEnv DB_NAME "u82300"
+SetEnv DB_USER "u82300"
+SetEnv DB_PASS "6029988"
+SetEnv JWT_SECRET "flower-shop-secret-key-2025"

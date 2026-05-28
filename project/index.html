@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цветочная Элегантность — Доставка цветов</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Все стили сайта остаются без изменений */
+        :root {
+            --pastel-pink: #FFD6E7;
+            --pastel-lavender: #E6E6FA;
+            --pastel-mint: #C1F0C1;
+            --pastel-peach: #FFE5B4;
+            --pastel-lilac: #D8BFD8;
+            --pastel-blue: #B0E0E6;
+            --pastel-yellow: #FFF8DC;
+            --text-dark: #5A5A5A;
+            --text-light: #7A7A7A;
+            --white: #FFFFFF;
+            --transition: all 0.4s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #FFFCF9;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Шапка */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            position: relative;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF8FAB;
+            z-index: 1002;
+        }
+        
+        .logo span {
+            color: #98D7C2;
+        }
+        
+        /* Навигация для компьютера */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links a:hover {
+            color: #FF8FAB;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #FF8FAB;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Кнопка заказа в шапке */
+        .header-cta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        
+        /* Бургер-меню для телефона */
+        .burger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+        
+        .burger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: #FF8FAB;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        
+        .burger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .burger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            padding: 80px 20px 40px;
+        }
+        
+        .mobile-menu.active {
+            left: 0;
+        }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+        
+        .mobile-menu a:hover {
+            color: #FF8FAB;
+            background: rgba(255, 214, 231, 0.2);
+        }
+        
+        /* Главный баннер с видео-фоном */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            margin-top: 70px; /* Отступ для фиксированной шапки */
+        }
+        
+        /* Видео на заднем фоне */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        /* Затемнение видео для лучшей читаемости текста */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--white);
+            padding: 60px 20px;
+            width: 100%;
+        }
+        
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px); /* Адаптивный размер шрифта */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: clamp(16px, 2.5vw, 20px); /* Адаптивный размер шрифта */
+            max-width: 600px;
+            margin: 0 auto 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: #FF8FAB;
+            color: var(--white);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            min-height: 50px;
+        }
+        
+        .btn:hover {
+            background: #FF7A9B;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 122, 155, 0.3);
+        }
+        
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 14px;
+            min-height: 40px;
+        }
+        
+        /* Преимущества */
+        .features {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: clamp(28px, 4vw, 36px); /* Адаптивный размер */
+            color: #7A5C7A;
+            margin-bottom: 50px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: #FF8FAB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--white);
+            font-size: 24px;
+        }
+        
+        /* Каталог с фотографиями цветов */
+        .catalog {
+            padding: 80px 0;
+            background: #FFFCF9;
+        }
+        
+        .catalog h2 {
+            text-align: center;
+            font-size: clamp(28px, 4vw, 36px);
+            color: #7A5C7A;
+            margin-bottom: 50px;
+        }
+        
+        .flower-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .flower-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .flower-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .flower-img {
+            height: 250px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .flower-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .flower-card:hover .flower-img img {
+            transform: scale(1.05);
+        }
+        
+        .flower-info {
+            padding: 20px;
+        }
+        
+        .flower-info h3 {
+            color: #7A5C7A;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .price {
+            font-size: 22px;
+            font-weight: 700;
+            color: #FF8FAB;
+            margin: 15px 0;
+        }
+        
+        /* Футер */
+        footer {
+            background: #7A5C7A;
+            color: var(--white);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .footer-logo span {
+            color: #FFD6E7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-icon:hover {
+            background: #FF8FAB;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .nav-links {
+                gap: 20px;
+            }
+            
+            .header-cta span {
+                display: none;
+            }
+            
+            .header-cta {
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Скрываем навигацию для компьютера, показываем бургер */
+            .nav-links {
+                display: none;
+            }
+            
+            .header-cta {
+                display: none;
+            }
+            
+            .burger {
+                display: flex;
+            }
+            
+            /* Корректируем отступы для мобильных */
+            .hero {
+                margin-top: 60px;
+            }
+            
+            .hero-content {
+                padding: 40px 15px;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+                margin-bottom: 25px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 15px;
+            }
+            
+            .features,
+            .catalog {
+                padding: 60px 0;
+            }
+            
+            .features h2,
+            .catalog h2 {
+                margin-bottom: 40px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .flower-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .flower-img {
+                height: 220px;
+            }
+            
+            .footer-content {
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+            
+            .features-grid {
+                gap: 20px;
+            }
+        }
+        
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            color: #FF8FAB;
+        }
+        
+        /* Дополнительные стили для улучшения UX на мобильных */
+        @media (hover: none) and (pointer: coarse) {
+            .feature-card:hover,
+            .flower-card:hover {
+                transform: none;
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .nav-links a:hover::after {
+                width: 0;
+            }
+        }
+        
+        /* Предотвращение масштабирования при фокусе на мобильных */
+        input, textarea, select {
+            font-size: 16px !important;
+        }
+        
+        /* Стили для сообщений формы */
+        .form-message {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .form-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .form-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        input.error, textarea.error, select.error {
+            border-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка с фиксированной навигацией -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Цветочная<span>Элегантность</span></div>
+                
+                <!-- Навигация для компьютера -->
+                <ul class="nav-links">
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#features">Преимущества</a></li>
+                    <li><a href="#catalog">Каталог</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+                
+                <!-- Кнопка заказа для компьютера -->
+                <button class="btn btn-small header-cta" id="openOrderBtnDesktop">
+                    <i class="fas fa-shopping-cart"></i> <span>Заказать</span>
+                </button>
+                
+                <!-- Бургер-меню для телефона -->
+                <button class="burger" id="burgerBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Мобильное меню -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#home" class="mobile-nav-link">Главная</a>
+            <a href="#features" class="mobile-nav-link">Преимущества</a>
+            <a href="#catalog" class="mobile-nav-link">Каталог</a>
+            <a href="#contacts" class="mobile-nav-link">Контакты</a>
+            <a href="#" class="mobile-nav-link" id="openOrderBtnMobile">Заказать букет</a>
+        </div>
+    </header>
+
+    <!-- Главный баннер с видео-фоном -->
+    <section class="hero" id="home">
+        <!-- Видео на заднем фоне -->
+        <video class="hero-video" autoplay muted loop playsinline>
+            <!-- Вставьте ваше видео 100899-video-72 -->
+            <!-- Если видео в той же папке: -->
+            <source src="100899-video-720.mp4" type="video/mp4">
+            <!-- Если видео в папке videos: -->
+            <!-- <source src="videos/100899-video-72.mp4" type="video/mp4"> -->
+            Ваш браузер не поддерживает видео.
+        </video>
+
+        <div class="container">
+            <div class="hero-content">
+                <h1>Доставка цветов с элегантностью</h1>
+                <p>Премиальные букеты от лучших флористов.<br>Бесплатная доставка за 2 часа.</p>
+                <button class="btn" id="heroOrderBtn">
+                    <i class="fas fa-gift"></i> Заказать букет
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Почему выбирают нас</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Свежие цветы</h3>
+                    <p>Только свежие цветы от проверенных поставщиков</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Быстрая доставка</h3>
+                    <p>Доставляем букеты за 2 часа</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Подарочная упаковка</h3>
+                    <p>Бесплатная элегантная упаковка для каждого букета</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>С любовью</h3>
+                    <p>Каждый букет создается с душой и вниманием к деталям</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Каталог с фотографиями цветов -->
+    <section class="catalog" id="catalog">
+        <div class="container">
+            <h2>Популярные букеты</h2>
+            
+            <div class="flower-grid">
+                <div class="flower-card">
+                    <div class="flower-img">
+                        <img src="20a1e741ad89a71a4918dae363deed97.jpg" 
+                             alt="Розовый букет"
+                             onerror="this.src='https://images.unsplash.com/photo-1560703650-ef3e0f254ae0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="flower-info">
+                        <h3>Розовая нежность</h3>
+                        <p>Розы, пионы, эустома в пастельных тонах</p>
+                        <div class="price">3 900 ₽</div>
+                        <button class="btn order-btn" style="width: 100%;" data-bouquet="Розовая нежность - 3 900 ₽">
+                            <i class="fas fa-cart-plus"></i> Заказать
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flower-card">
+                    <div class="flower-img">
+                        <img src="730592bc5195a7b8edb6214947a7ad86.jpg" 
+                             alt="Сиреневый букет"
+                             onerror="this.src='https://images.unsplash.com/photo-1578948856697-db91d246b7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="flower-info">
+                        <h3>Сиреневый рассвет</h3>
+                        <p>Орхидеи, лаванда, ирисы и эустома</p>
+                        <div class="price">4 500 ₽</div>
+                        <button class="btn order-btn" style="width: 100%;" data-bouquet="Сиреневый рассвет - 4 500 ₽">
+                            <i class="fas fa-cart-plus"></i> Заказать
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flower-card">
+                    <div class="flower-img">
+                        <img src="a2fc4b374698836ccde906a54e40f783.jpg" 
+                             alt="Желтый букет"
+                             onerror="this.src='https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="flower-info">
+                        <h3>Солнечное настроение</h3>
+                        <p>Герберы, тюльпаны и гипсофила</p>
+                        <div class="price">2 900 ₽</div>
+                        <button class="btn order-btn" style="width: 100%;" data-bouquet="Солнечное настроение - 2 900 ₽">
+                            <i class="fas fa-cart-plus"></i> Заказать
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flower-card">
+                    <div class="flower-img">
+                        <img src="045156938685db0e3bd554e4c9ede8d1.jpg" 
+                             alt="Белый букет"
+                             onerror="this.src='https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="flower-info">
+                        <h3>Голубая мечта</h3>
+                        <p>Гортензии, дельфиниумы, васильки и ромашки</p>
+                        <div class="price">3 700 ₽</div>
+                        <button class="btn order-btn" style="width: 100%;" data-bouquet="Голубая мечта - 3 700 ₽">
+                            <i class="fas fa-cart-plus"></i> Заказать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer id="contacts">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">Цветочная<span>Элегантность</span></div>
+                    <p style="margin-top: 15px; opacity: 0.8;">
+                        Доставка цветов по Краснодару
+                    </p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #FFD6E7; margin-bottom: 20px;">Контакты</h3>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fas fa-phone"></i> +7 (929) 837-40-17
+                    </p>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fas fa-envelope"></i> info@flowers.ru
+                    </p>
+                    <p>
+                        <i class="fas fa-map-marker-alt"></i> Краснодар, ул. Красная, 184
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 style="color: #FFD6E7; margin-bottom: 20px;">Время работы</h3>
+                    <p>Пн-Вс: 9:00 - 21:00</p>
+                    <p style="margin-top: 10px; font-size: 14px;">
+                        Доставка круглосуточно
+                    </p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2025 Цветочная Элегантность.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно заказа -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <h2 style="color: #7A5C7A; margin-bottom: 20px;">Заказать букет</h2>
+            
+            <!-- Сообщения формы -->
+            <div id="formMessage" class="form-message" style="display: none;"></div>
+            
+            <form id="orderForm" novalidate>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Ваше имя *</label>
+                    <input type="text" id="orderName" name="name" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;" required>
+                    <div class="error-message" id="nameError">Пожалуйста, введите ваше имя</div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Телефон *</label>
+                    <input type="tel" id="orderPhone" name="phone" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;" required>
+                    <div class="error-message" id="phoneError">Пожалуйста, введите корректный номер телефона</div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                    <input type="email" id="orderEmail" name="email" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;">
+                    <div class="error-message" id="emailError">Пожалуйста, введите корректный email</div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Выберите букет *</label>
+                    <select id="bouquetSelect" name="bouquet" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;" required>
+                        <option value="">-- Выберите букет --</option>
+                        <option value="Розовая нежность - 3 900 ₽">Розовая нежность - 3 900 ₽</option>
+                        <option value="Сиреневый рассвет - 4 500 ₽">Сиреневый рассвет - 4 500 ₽</option>
+                        <option value="Солнечное настроение - 2 900 ₽">Солнечное настроение - 2 900 ₽</option>
+                        <option value="Голубая мечта - 3 700 ₽">Голубая мечта - 3 700 ₽</option>
+                        <option value="Другой букет">Другой букет (укажите в комментарии)</option>
+                    </select>
+                    <div class="error-message" id="bouquetError">Пожалуйста, выберите букет</div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Комментарий к заказу</label>
+                    <textarea id="orderComment" name="message" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; height: 100px; font-size: 16px;" placeholder="Дополнительные пожелания, адрес доставки и т.д."></textarea>
+                </div>
+                
+                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <input type="checkbox" id="agreePolicy" name="agree" required style="width: 20px; height: 20px;">
+                    <label for="agreePolicy" style="font-size: 14px; margin: 0;">
+                        Согласен с <a href="#" id="privacyLink" style="color: #FF8FAB;">политикой обработки данных</a> *
+                    </label>
+                </div>
+                <div class="error-message" id="agreeError">Необходимо ваше согласие</div>
+                
+                <button type="submit" class="btn" id="submitOrderBtn" style="width: 100%;">
+                    <span id="submitText">Отправить заказ</span>
+                    <span id="submitLoading" class="loading" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // КОНФИГУРАЦИЯ FORMCARRY - используем ваш ID
+        const FORMCARRY_FORM_ID = "-RR3nvd9tly"; // Ваш FormCarry ID
+        const FORM_URL = `https://formcarry.com/s/${FORMCARRY_FORM_ID}`;
+        const FORM_STORAGE_KEY = 'flower_order_data';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы мобильного меню
+            const burgerBtn = document.getElementById('burgerBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            // Элементы модального окна
+            const orderModal = document.getElementById('orderModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const openOrderBtns = document.querySelectorAll('#openOrderBtnDesktop, #heroOrderBtn, .order-btn, #openOrderBtnMobile');
+            // Элементы формы
+            const orderForm = document.getElementById('orderForm');
+            const formMessage = document.getElementById('formMessage');
+            const submitOrderBtn = document.getElementById('submitOrderBtn');
+            const submitText = document.getElementById('submitText');
+            const submitLoading = document.getElementById('submitLoading');
+            const privacyLink = document.getElementById('privacyLink');
+            const phoneInput = document.getElementById('orderPhone');
+            
+            // Поля формы для сохранения
+            const formFields = ['orderName', 'orderPhone', 'orderEmail', 'bouquetSelect', 'orderComment', 'agreePolicy'];
+            
+            // Открытие/закрытие мобильного меню
+            if (burgerBtn && mobileMenu) {
+                burgerBtn.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                    document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : 'auto';
+                });
+                
+                // Закрытие меню при клике на ссылку
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        burgerBtn.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+                
+                // Закрытие меню при клике вне его
+                document.addEventListener('click', function(event) {
+                    if (mobileMenu.classList.contains('active') && 
+                        !mobileMenu.contains(event.target) && 
+                        !burgerBtn.contains(event.target)) {
+                        burgerBtn.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+            
+            // Открытие модального окна заказа
+            openOrderBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Если у кнопки есть data-bouquet, выбираем соответствующий букет
+                    if (this.dataset.bouquet) {
+                        const bouquetSelect = document.getElementById('bouquetSelect');
+                        bouquetSelect.value = this.dataset.bouquet;
+                    }
+                    
+                    orderModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Восстанавливаем сохраненные данные
+                    loadSavedData();
+                });
+            });
+            
+            // Закрытие модального окна
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    orderModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    hideMessage();
+                    clearErrors();
+                });
+            }
+            
+            // Закрытие при клике вне окна
+            window.addEventListener('click', function(event) {
+                if (event.target === orderModal) {
+                    orderModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    hideMessage();
+                    clearErrors();
+                }
+            });
+            
+            // Закрытие по ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && orderModal.style.display === 'flex') {
+                    orderModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    hideMessage();
+                    clearErrors();
+                }
+            });
+            
+            // Политика конфиденциальности
+            if (privacyLink) {
+                privacyLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Политика обработки персональных данных:\n\n1. Ваши данные используются только для связи с вами\n2. Мы не передаем данные третьим лицам\n3. Вы можете запросить удаление ваших данных\n4. Данные хранятся в защищенном хранилище');
+                });
+            }
+            
+            // Маска для телефона
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\D/g, '');
+                    
+                    if (value.length > 0) {
+                        value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9) + '-' + value.substring(9, 11);
+                        value = value.trim();
+                    }
+                    
+                    this.value = value.substring(0, 18);
+                    saveFormData();
+                    clearFieldError('orderPhone');
+                });
+            }
+            
+            // Сохранить данные формы
+            function saveFormData() {
+                formFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) {
+                        if (element.type === 'checkbox') {
+                            localStorage.setItem(field, element.checked);
+                        } else {
+                            localStorage.setItem(field, element.value);
+                        }
+                    }
+                });
+            }
+            
+            // Загрузить сохраненные данные
+            function loadSavedData() {
+                formFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) {
+                        const saved = localStorage.getItem(field);
+                        if (saved !== null) {
+                            if (element.type === 'checkbox') {
+                                element.checked = saved === 'true';
+                            } else {
+                                element.value = saved;
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Очистить данные
+            function clearFormData() {
+                formFields.forEach(field => {
+                    localStorage.removeItem(field);
+                });
+            }
+            
+            // Сохранять при вводе
+            formFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    element.addEventListener('input', () => {
+                        saveFormData();
+                        clearFieldError(field);
+                    });
+                    if (element.type === 'checkbox') {
+                        element.addEventListener('change', () => {
+                            saveFormData();
+                            clearFieldError(field);
+                        });
+                    }
+                }
+            });
+            
+            // Очистка ошибок для поля
+            function clearFieldError(fieldId) {
+                const element = document.getElementById(fieldId);
+                const errorElement = document.getElementById(fieldId.replace('order', '').replace('Policy', '') + 'Error');
+                
+                if (element && errorElement) {
+                    element.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+            }
+            
+            // Показать ошибку
+            function showError(fieldId, message) {
+                const element = document.getElementById(fieldId);
+                const errorElement = document.getElementById(fieldId.replace('order', '').replace('Policy', '') + 'Error');
+                
+                if (element && errorElement) {
+                    element.classList.add('error');
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+            }
+            
+            // Очистить все ошибки
+            function clearErrors() {
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(msg => msg.style.display = 'none');
+                
+                const inputs = document.querySelectorAll('input, textarea, select');
+                inputs.forEach(input => input.classList.remove('error'));
+            }
+            
+            // Показать сообщение
+            function showMessage(text, type) {
+                formMessage.textContent = text;
+                formMessage.className = `form-message form-${type}`;
+                formMessage.style.display = 'block';
+                
+                if (type === 'success') {
+                    setTimeout(hideMessage, 5000);
+                }
+            }
+            
+            // Скрыть сообщение
+            function hideMessage() {
+                formMessage.style.display = 'none';
+            }
+            
+            // Валидация формы
+            function validateForm() {
+                let isValid = true;
+                clearErrors();
+                
+                // Валидация имени
+                const name = document.getElementById('orderName').value.trim();
+                if (!name) {
+                    showError('orderName', 'Пожалуйста, введите ваше имя');
+                    isValid = false;
+                }
+                
+                // Валидация телефона
+                const phone = document.getElementById('orderPhone').value.trim();
+                if (!phone) {
+                    showError('orderPhone', 'Пожалуйста, введите номер телефона');
+                    isValid = false;
+                } else if (phone !== '+7 (') {
+                    const cleanPhone = phone.replace(/[^\d+]/g, '');
+                    if (cleanPhone.length < 11) {
+                        showError('orderPhone', 'Номер телефона должен содержать 11 цифр');
+                        isValid = false;
+                    }
+                }
+                
+                // Валидация email (если заполнен)
+                const email = document.getElementById('orderEmail').value.trim();
+                if (email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        showError('orderEmail', 'Пожалуйста, введите корректный email');
+                        isValid = false;
+                    }
+                }
+                
+                // Валидация букета
+                const bouquet = document.getElementById('bouquetSelect').value;
+                if (!bouquet) {
+                    showError('bouquetSelect', 'Пожалуйста, выберите букет');
+                    isValid = false;
+                }
+                
+                // Валидация согласия
+                const agree = document.getElementById('agreePolicy').checked;
+                if (!agree) {
+                    showError('agreePolicy', 'Необходимо ваше согласие с политикой обработки данных');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // Обработка отправки формы
+            if (orderForm) {
+                orderForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Валидация
+                    if (!validateForm()) {
+                        showMessage('Пожалуйста, исправьте ошибки в форме', 'error');
+                        return;
+                    }
+                    
+                    // Блокировать кнопку и показать загрузку
+                    submitOrderBtn.disabled = true;
+                    submitText.style.display = 'none';
+                    submitLoading.style.display = 'inline-block';
+                    
+                    hideMessage();
+                    
+                    try {
+                        // Подготовка данных формы
+                        const formData = new FormData(orderForm);
+                        
+                        // Добавляем дополнительные данные
+                        formData.append('service', 'Цветочная Элегантность');
+                        formData.append('date', new Date().toLocaleString());
+                        
+                        // Отправка на FormCarry
+                        const response = await fetch(FORM_URL, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok && result.code === 200) {
+                            // Успешная отправка
+                            showMessage('✅ Заказ успешно отправлен! Мы свяжемся с вами в течение 15 минут.', 'success');
+                            
+                            // Очистить форму и LocalStorage
+                            orderForm.reset();
+                            clearFormData();
+                            
+                            // Автоматически закрыть окно через 3 секунды
+                            setTimeout(() => {
+                                orderModal.style.display = 'none';
+                                document.body.style.overflow = 'auto';
+                                hideMessage();
+                            }, 3000);
+                            
+                        } else {
+                            throw new Error(result.message || 'Ошибка отправки формы');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Ошибка отправки:', error);
+                        showMessage('⚠️ Ошибка отправки: ' + (error.message || 'Пожалуйста, попробуйте еще раз'), 'error');
+                        
+                    } finally {
+                        // Разблокировать кнопку
+                        submitOrderBtn.disabled = false;
+                        submitText.style.display = 'inline';
+                        submitLoading.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Плавная прокрутка
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Автовоспроизведение видео
+            const video = document.querySelector('.hero-video');
+            if (video) {
+                video.muted = true;
+                video.play().catch(function(error) {
+                    console.log("Автовоспроизведение видео:", error);
+                });
+            }
+            
+            // Фиксированная шапка при скролле
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Прокрутка вниз
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Прокрутка вверх
+                    header.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // Загрузить сохраненные данные при загрузке страницы
+            if (window.location.hash === '#order') {
+                setTimeout(() => {
+                    const openBtn = document.querySelector('#openOrderBtnDesktop, #heroOrderBtn');
+                    if (openBtn) openBtn.click();
+                }, 500);
+            }
+            
+            // Предупреждение если FormCarry ID не заменен
+            if (FORMCARRY_FORM_ID === "-RR3nvd9tly" || FORMCARRY_FORM_ID === "YOUR_FORMCARRY_FORM_ID") {
+                console.warn('⚠️ Для работы формы замените FORMCARRY_FORM_ID на ваш реальный Form ID от formcarry.com');
+            }
+        });
+    </script>
+</body>
+</html>
