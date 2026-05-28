@@ -957,8 +957,9 @@
 
     <script>
         // КОНФИГУРАЦИЯ FORMCARRY - используем ваш ID
-        const FORMCARRY_FORM_ID = "-RR3nvd9tly"; // Ваш FormCarry ID
-        const FORM_URL = `https://formcarry.com/s/${FORMCARRY_FORM_ID}`;
+        //const FORMCARRY_FORM_ID = "-RR3nvd9tly"; // Ваш FormCarry ID
+        //const FORM_URL = `https://formcarry.com/s/${FORMCARRY_FORM_ID}`;
+        const API_URL = '/order.php';
         const FORM_STORAGE_KEY = 'flower_order_data';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1245,69 +1246,61 @@
                 orderForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
-                    // Валидация
                     if (!validateForm()) {
                         showMessage('Пожалуйста, исправьте ошибки в форме', 'error');
                         return;
                     }
                     
-                    // Блокировать кнопку и показать загрузку
                     submitOrderBtn.disabled = true;
                     submitText.style.display = 'none';
                     submitLoading.style.display = 'inline-block';
-                    
                     hideMessage();
                     
                     try {
-                        // Подготовка данных формы
                         const formData = new FormData(orderForm);
-                        
-                        // Добавляем дополнительные данные
                         formData.append('service', 'Цветочная Элегантность');
                         formData.append('date', new Date().toLocaleString());
                         
-                        // Отправка на FormCarry
-                        const response = await fetch(FORM_URL, {
+                        // ОТПРАВКА НА ВАШ PHP БЭКЕНД (вместо FormCarry)
+                        const response = await fetch('/order.php', {
                             method: 'POST',
-                            body: formData,
-                            headers: {
-                                'Accept': 'application/json'
-                            }
+                            body: formData
                         });
                         
                         const result = await response.json();
                         
-                        if (response.ok && result.code === 200) {
-                            // Успешная отправка
-                            showMessage('✅ Заказ успешно отправлен! Мы свяжемся с вами в течение 15 минут.', 'success');
-                            
-                            // Очистить форму и LocalStorage
+                        if (response.ok && result.success) {
+                            showMessage(result.message + ' Ваш логин: ' + (result.credentials?.login || 'сохранен в cookie'), 'success');
                             orderForm.reset();
                             clearFormData();
                             
-                            // Автоматически закрыть окно через 3 секунды
+                            // Если сервер вернул логин/пароль, показываем их
+                            if (result.credentials) {
+                                setTimeout(() => {
+                                    alert('🔐 Ваши данные для входа:\nЛогин: ' + result.credentials.login + '\nПароль: ' + result.credentials.password + '\n\nСохраните их!');
+                                }, 500);
+                            }
+                            
                             setTimeout(() => {
                                 orderModal.style.display = 'none';
                                 document.body.style.overflow = 'auto';
                                 hideMessage();
                             }, 3000);
-                            
                         } else {
-                            throw new Error(result.message || 'Ошибка отправки формы');
+                            throw new Error(result.message || 'Ошибка отправки');
                         }
                         
                     } catch (error) {
-                        console.error('Ошибка отправки:', error);
-                        showMessage('⚠️ Ошибка отправки: ' + (error.message || 'Пожалуйста, попробуйте еще раз'), 'error');
-                        
+                        console.error('Ошибка:', error);
+                        showMessage('⚠️ Ошибка: ' + error.message, 'error');
                     } finally {
-                        // Разблокировать кнопку
                         submitOrderBtn.disabled = false;
                         submitText.style.display = 'inline';
                         submitLoading.style.display = 'none';
                     }
                 });
             }
+            
             
             // Плавная прокрутка
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
