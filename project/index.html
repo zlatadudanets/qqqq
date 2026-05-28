@@ -959,7 +959,7 @@
         // КОНФИГУРАЦИЯ FORMCARRY - используем ваш ID
         //const FORMCARRY_FORM_ID = "-RR3nvd9tly"; // Ваш FormCarry ID
         //const FORM_URL = `https://formcarry.com/s/${FORMCARRY_FORM_ID}`;
-        const API_URL = '/order.php';
+        const API_URL = 'order.php';
         const FORM_STORAGE_KEY = 'flower_order_data';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1262,7 +1262,7 @@
                         formData.append('date', new Date().toLocaleString());
                         
                         // ОТПРАВКА НА ВАШ PHP БЭКЕНД (вместо FormCarry)
-                        const response = await fetch('/order.php', {
+                        const response = await fetch('order.php', {
                             method: 'POST',
                             body: formData
                         });
