@@ -66,7 +66,7 @@ function saveOrderToDatabase($pdo, $data) {
 }
 
 function saveCredentials($pdo, $orderId, $login, $passwordHash) {
-    $stmt = $pdo->prepare("INSERT INTO credentials (order_id, login, password_hash) VALUES (:order_id, :login, :hash)");
+    $stmt = $pdo->prepare("INSERT INTO credentials_2 (order_id, login, password_hash) VALUES (:order_id, :login, :hash)");
     return $stmt->execute([
         ':order_id' => $orderId,
         ':login' => $login,
@@ -75,7 +75,7 @@ function saveCredentials($pdo, $orderId, $login, $passwordHash) {
 }
 
 function findCredentialsByLogin($pdo, $login) {
-    $stmt = $pdo->prepare("SELECT order_id, password_hash FROM credentials WHERE login = :login");
+    $stmt = $pdo->prepare("SELECT order_id, password_hash FROM credentials_2 WHERE login = :login");
     $stmt->execute([':login' => $login]);
     $row = $stmt->fetch();
     if (!$row) return null;
@@ -151,7 +151,7 @@ function getAllOrders($pdo) {
 function deleteOrder($pdo, $id) {
     try {
         $pdo->beginTransaction();
-        $pdo->prepare("DELETE FROM credentials WHERE order_id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM credentials_2 WHERE order_id = ?")->execute([$id]);
         $pdo->prepare("DELETE FROM orders WHERE id = ?")->execute([$id]);
         $pdo->commit();
         return true;
@@ -177,7 +177,7 @@ function getOrderStats($pdo) {
 }
 
 function getAdminByLogin($pdo, $login) {
-    $stmt = $pdo->prepare("SELECT password_hash FROM admin_credentials WHERE login = ?");
+    $stmt = $pdo->prepare("SELECT password_hash FROM admin_credentials_2 WHERE login = ?");
     $stmt->execute([$login]);
     $row = $stmt->fetch();
     if (!$row) return null;
