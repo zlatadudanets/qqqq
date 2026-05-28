@@ -156,7 +156,7 @@ function renderLogin($error, $csrfToken) {
     </form>
 
     <div class="links">
-        <a href="order.php">← Оформить новый заказ</a>
+        <a href="index.html">← Оформить новый заказ</a>
     </div>
 </div>
 </body>
