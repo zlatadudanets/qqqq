@@ -274,7 +274,7 @@ function renderAdminList($orders, $stats, $csrfToken) {
                 <td data-label="Дата"><?= date('d.m.Y H:i', strtotime($order['created_at'])) ?></td>
                 <td data-label="Клиент"><?= htmlspecialchars($order['customer_name']) ?></td>
                 <td data-label="Телефон"><?= htmlspecialchars($order['customer_phone']) ?></td>
-                <td data-label="Букет"><?= htmlspecialchars(mb_substr($order['bouquet_name'], 0, 30)) ?></td>
+                <td data-label="Букет"><?= htmlspecialchars(substr($order['bouquet_name'], 0, 90)) ?></td>
                 <td data-label="Сумма"><?= $order['bouquet_price'] ? number_format($order['bouquet_price'], 0, '', ' ') . ' ₽' : '-' ?></td>
                 <td data-label="Статус">
                     <span class="status-badge status-<?= $order['status'] ?>">
